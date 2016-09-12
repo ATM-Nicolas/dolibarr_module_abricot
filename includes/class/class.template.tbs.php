@@ -155,6 +155,22 @@ class TTemplateTBS {
 			//exit($result.', '.$filePDF);
 			return $filePDF;
 		}	
+		
+		elseif(!empty($conf->global->ABRICOT_USE_DOLIBARR_METHOD_TO_CONVERT_PDF)){
+			
+			require_once ODTPHP_PATH.'odf.php';
+			
+			$odfHandler = new odf( $file,array(
+				'PATH_TO_TMP'	  => $conf->user->dir_temp,
+				'ZIP_PROXY'		  => 'PclZipProxy',	// PhpZipProxy or PclZipProxy. Got "bad compression method" error when using PhpZipProxy.
+				'DELIMITER_LEFT'  => '{',
+				'DELIMITER_RIGHT' => '}'
+			) );
+			//var_dump($file, $conf->user);exit;
+			return $odfHandler->exportAsAttachedPDF();
+			
+		}
+		
 		else {
 		
 			if($extension == '.html' || $extension == '.php') {
@@ -178,6 +194,7 @@ class TTemplateTBS {
 			return $res;		
 			
 		}
+		
 	}
 }
 
